@@ -1,3 +1,4 @@
+'''Programa que muestra la interfaz de un compresor de archivos txt'''
 #LIBRERIAS
 import tkinter as tk
 from tkinter import filedialog, ttk

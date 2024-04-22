@@ -1,4 +1,3 @@
-'''Programa que muestra la interfaz de un compresor de archivos txt'''
 #LIBRERIAS
 import tkinter as tk
 from tkinter import filedialog, ttk
@@ -6,24 +5,33 @@ from tkinter import filedialog, ttk
 #ABRE EL EXPLORADOR DE ARCHIVOS
 def open_file_dialog():
 	global file_path, label, show_file_button, show_result_button, show_invert_button
-	file_path = filedialog.askopenfilename()
+	tipos_de_archivo = [("Archivos de texto", "*.txt"),("Arcihivos binarios", "*.bin")]
+	file_path = filedialog.askopenfilename(filetypes=tipos_de_archivo)
 	print("Archivo seleccionado:", file_path)
-	#obtiene la extension separando el .txt
+	#obtiene la extension separando el punto
 	extension = file_path.split(".")
 	#[-1] obtiene el ultimo elemento de la lista
 	print("Extensión:", extension[-1])
-	#si el archivo no es un .txt
-	if extension[-1] != "txt":
-		label.config(text = "El archivo seleccionado no es un .txt")
+	#si el archivo es un txt
+	if extension[-1] == "txt":
+		label.config(text = "Archivo txt seleccionado")
+		show_file_button.config(state='normal')
+		show_result_button.config(state='normal')
+		show_invert_button.config(state='disabled')
+		contar_caracteres()
+	#si el archivo es un bin
+	elif extension[-1] == "bin":
+		label.config(text = "Archivo bin seleccionado")
+		show_file_button.config(state='normal')
+		show_result_button.config(state='disabled')
+		show_invert_button.config(state='normal')
+		contar_caracteres()
+	#si no es un archivo compatible
+	else:
+		label.config(text = "Archivo no compatible")
 		show_file_button.config(state='disabled')
 		show_result_button.config(state='disabled')
 		show_invert_button.config(state='disabled')
-	else:
-		label.config(text = "Archivo txt seleccionado correctamente")
-		show_file_button.config(state='normal')
-		show_result_button.config(state='normal')
-		show_invert_button.config(state='normal')
-		contar_caracteres()
 
 #ABRE UNA VENTANA PARA MOSTRAR EL ARCHIVO
 def show_file_data():
@@ -35,13 +43,13 @@ def show_file_data():
 	new_window.title("Ver archivo 💥")
 	new_window['background'] = '#003C43'
 	new_window.resizable(False, False)
-	label = tk.Label(new_window, text = "Mostrando el contenido del archivo .txt", fg="white", bg='#003C43', font=("Arial", 12))
+	label = tk.Label(new_window, text = "Mostrando el contenido del archivo", fg="white", bg='#003C43', font=("Arial", 12))
 	label.place(relx=0.5, rely=0.07, anchor = 'center')
 	label2 = tk.Label(new_window, text = "Mostrando el conteo de caracteres", fg="white", bg='#003C43', font=("Arial", 12))
 	label2.place(relx=0.5, rely=0.50, anchor = 'center')
 
 	#lee el archivo
-	with open(file_path, "r") as file:
+	with open(file_path, encoding='UTF-8') as file:
 		texto_txt = file.read()
 
 	#crea el widget del texto del archivo
@@ -129,7 +137,7 @@ def show_main_window():
 	main_window.resizable(False, False)
 
 	#crear el texto de la ventana principal
-	label = tk.Label(main_window, text="Pulsa el botón para seleccionar un archivo .txt", fg='#E3FEF7', bg='#003C43', font=("Arial", 12))
+	label = tk.Label(main_window, text="Seleccione un archivo de texto o binario", fg='#E3FEF7', bg='#003C43', font=("Arial", 12))
 	label.place(relx=0.5, rely=0.15, anchor='center')
 
 	#crear el botón para escoger un archivo
@@ -137,7 +145,7 @@ def show_main_window():
 	button.place(relx=0.5, rely=0.30, anchor='center')
 
 	#crear el botón para mostrar el texto del archivo
-	show_file_button = tk.Button(main_window, text="Ver datos del archivo", command=show_file_data, state='disabled', fg='#003C43', bg='#E3FEF7', font=("Arial", 11))
+	show_file_button = tk.Button(main_window, text="Ver contenido del archivo", command=show_file_data, state='disabled', fg='#003C43', bg='#E3FEF7', font=("Arial", 11))
 	show_file_button.place(relx=0.5, rely=0.45, anchor='center')
 
 	#crear el botón para comprimir el archivo
@@ -145,7 +153,7 @@ def show_main_window():
 	show_result_button.place(relx=0.5, rely=0.60, anchor='center')
  
 	#crear el botón para descomprimir el archivo
-	show_invert_button = tk.Button(main_window, text="Desomprimir archivo", command=show_invert_data, state='disabled', fg='#003C43', bg='#E3FEF7', font=("Arial", 11))
+	show_invert_button = tk.Button(main_window, text="Descomprimir archivo", command=show_invert_data, state='disabled', fg='#003C43', bg='#E3FEF7', font=("Arial", 11))
 	show_invert_button.place(relx=0.5, rely=0.75, anchor='center')
 
 	#inicia el bucle de la ventana
@@ -154,19 +162,22 @@ def show_main_window():
 #CUENTA LOS CARACTERES DEL ARCHIVO
 def contar_caracteres():
 	global lista_caracteres, file_path
-	with open(file_path, "r") as file:
+	lista_local = {}
+	with open(file_path, encoding='UTF-8') as file:
 		#lee el archivo txt
 		file_contents = file.read()
 	#iterara sobre cada caracter del archivo
 	for char in file_contents:
 		#si el caracter no es una clave en el diccionario
-		if char not in lista_caracteres:
+		if char not in lista_local:
 			#agrega el caracter al diccionario con un valor de 1
-			lista_caracteres[char] = 1
+			lista_local[char] = 1
 		#si ya esta en el diccionario
 		else:
 			#aumenta el valor de la clave del caracter
-			lista_caracteres[char] += 1
+			lista_local[char] += 1
+	#ordena el diccionario por el valor de la clave
+	lista_caracteres = dict(sorted(lista_local.items(), key=lambda x: x[1], reverse=False))
 
 #INICIA EL PROGRAMA
 file_path = ""

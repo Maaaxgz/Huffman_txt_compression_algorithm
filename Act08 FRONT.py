@@ -72,6 +72,8 @@ def show_file_data():
 			#agrega la clave y el valor a la cadena como renglon
 			texto_conteo += "  Caracter: " + clave + "    |    Repeticiones: " + str(valor) + "\n"
 	text2.insert('end', texto_conteo)
+	#suma los valores de las claves
+	text2.insert('end', "\n  Total de caracteres: " + str(sum(lista_caracteres.values())))
 	text2.configure(state='disabled')
 
 	#crea un scrollbar y lo asocia con el widget de texto

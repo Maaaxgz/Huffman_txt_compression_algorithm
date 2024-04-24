@@ -1,7 +1,7 @@
 # Huffman text compression algorithm
 **Algoritmo de Huffman para la compresion de archivos**
 ## Descripcion
-El siguiente programa es una interfaz grafica para un programa de compresion de archivos. En este se puede abrir el explorador para escoger un archivo, asi como validar la extension .txt del mismo. Permite visualizar el texto contenido en el archivo, junto con un conteo de la cantidad y tipo de caracteres dentro de este. Tambien hay un apartado para mostrar el archivo comprimido y descomprimido respectivamente.
+El siguiente programa es una interfaz grafica para un programa de compresion y descompresion de archivos. En este se puede abrir el explorador para escoger un archivo de texto o binario. Permite visualizar el contenido en el archivo, junto con un conteo ordenado de la cantidad y tipo de caracteres dentro de este. Tambien hay un apartado para mostrar el archivo comprimido y descomprimido respectivamente.
 ## Funcionamiento
 Para poder usar la libreria dentro del programa, se necesita importar  la libreria tkinter con las siguiente lineas:
 ```
